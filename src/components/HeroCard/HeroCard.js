@@ -29,28 +29,28 @@ const HeroAvatar = styled.div`
   background-position: center;
 `;
 
-export function HeroCard() {
+export function HeroCard({ secretIdentity, name, picture, universe, id }) {
   return (
     <Card>
       <InformationGrid p={Spaces.TWO} mb={Spaces.ONE_HALF}>
         <Box>
           <Caption as="div" color={Colors.GRAY_600}>
-            Bruce Wayne
+            {secretIdentity}
           </Caption>
           <Box mb={Spaces.ONE}>
-            <HeadingTwo>Batman</HeadingTwo>
+            <HeadingTwo>{name}</HeadingTwo>
           </Box>
           <Description as="div" color={Colors.GRAY_700}>
-            <strong>Universo:</strong> DC Comics
+            <strong>Universo:</strong> {universe}
           </Description>
           <Description as="div" color={Colors.GRAY_700}>
-            <strong>Nota atual:</strong> 5
+            <strong>Nota atual:</strong> -
           </Description>
         </Box>
-        <HeroAvatar src="https://www.superherodb.com/pictures2/portraits/10/100/639.jpg" />
+        <HeroAvatar src={picture} />
       </InformationGrid>
       <Box width="87px">
-        <ButtonLink>Ver mais</ButtonLink>
+        <ButtonLink>Ver Mais</ButtonLink>
       </Box>
     </Card>
   );

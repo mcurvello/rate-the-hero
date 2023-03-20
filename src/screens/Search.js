@@ -33,12 +33,24 @@ export function Search() {
         </Box>
       </Flex>
       <HeroesGrid px={[Spaces.ONE, Spaces.TWO]} pb={[Spaces.ONE, Spaces.TWO]}>
-        <HeroCard />
-        <HeroCard />
-        <HeroCard />
-        <HeroCard />
-        <HeroCard />
-        <HeroCard />
+        <HeroCard
+          secretIdentity="Terry McGinnis"
+          name="Batman"
+          picture="https://www.superherodb.com/pictures2/portraits/10/100/10441.jpg"
+          universe="DC Comics"
+        />
+        <HeroCard
+          secretIdentity="Bruce Wayne"
+          name="Batman"
+          picture="https://www.superherodb.com/pictures2/portraits/10/100/639.jpg"
+          universe="DC Comics"
+        />
+        <HeroCard
+          secretIdentity="Dick Grayson"
+          name="Batman II"
+          picture="https://www.superherodb.com/pictures2/portraits/10/100/1496.jpg"
+          universe="DC Comics"
+        />
       </HeroesGrid>
     </>
   );
