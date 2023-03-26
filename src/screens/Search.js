@@ -1,9 +1,11 @@
+import React from "react";
 import styled from "styled-components";
 import { Box, Flex } from "reflexbox";
 import { Spaces } from "../shared/DesignTokens";
 import { SearchField } from "../common-components/SearchField/SearchField";
 import { Button } from "../common-components/Button/Button";
 import { HeroCard } from "../components/HeroCard/HeroCard";
+import useAxios from "axios-hooks";
 
 const HeroesGrid = styled(Box)`
   display: grid;
@@ -16,6 +18,35 @@ const HeroesGrid = styled(Box)`
 `;
 
 export function Search() {
+  const [search, setSearch] = React.useState({
+    value: "captain",
+    doSearch: false,
+  });
+
+  const [{ data: heroes }, searchHero] = useAxios(`/search/${search.value}`, {
+    manual: true,
+  });
+
+  React.useEffect(() => {
+    searchHero();
+  }, []);
+
+  React.useEffect(() => {
+    if (search.doSearch) {
+      searchHero().then(() => {
+        setSearch((prevValue) => ({ ...prevValue, doSearch: false }));
+      });
+    }
+  }, [search]);
+
+  function handleUpdateSearchValue({ target: { value } }) {
+    setSearch((prevValue) => ({ ...prevValue, value }));
+  }
+
+  function handleSearch() {
+    setSearch((prevValue) => ({ ...prevValue, doSearch: true }));
+  }
+
   return (
     <>
       <Flex
@@ -26,32 +57,29 @@ export function Search() {
         mb={[Spaces.TWO, Spaces.FOUR]}
       >
         <Box flexGrow="1">
-          <SearchField placeholder="Digite um nome de herói ou heroína" />
+          <SearchField
+            placeholder="Digite um nome de herói ou heroína"
+            onKeyUp={handleUpdateSearchValue}
+          />
         </Box>
         <Box ml={Spaces.TWO}>
-          <Button>Buscar</Button>
+          <Button onClick={handleSearch}>Buscar</Button>
         </Box>
       </Flex>
-      <HeroesGrid px={[Spaces.ONE, Spaces.TWO]} pb={[Spaces.ONE, Spaces.TWO]}>
-        <HeroCard
-          secretIdentity="Terry McGinnis"
-          name="Batman"
-          picture="https://www.superherodb.com/pictures2/portraits/10/100/10441.jpg"
-          universe="DC Comics"
-        />
-        <HeroCard
-          secretIdentity="Bruce Wayne"
-          name="Batman"
-          picture="https://www.superherodb.com/pictures2/portraits/10/100/639.jpg"
-          universe="DC Comics"
-        />
-        <HeroCard
-          secretIdentity="Dick Grayson"
-          name="Batman II"
-          picture="https://www.superherodb.com/pictures2/portraits/10/100/1496.jpg"
-          universe="DC Comics"
-        />
-      </HeroesGrid>
+      {heroes && (
+        <HeroesGrid px={[Spaces.ONE, Spaces.TWO]} pb={[Spaces.ONE, Spaces.TWO]}>
+          {heroes.results.map((hero) => (
+            <HeroCard
+              key={hero.id}
+              id={hero.id}
+              secretIdentity={hero.biography["full-name"]}
+              name={hero.name}
+              picture={hero.image.url}
+              universe={hero.biography.publisher}
+            />
+          ))}
+        </HeroesGrid>
+      )}
     </>
   );
 }
