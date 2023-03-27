@@ -5,7 +5,7 @@ import { Spaces } from "../shared/DesignTokens";
 import { SearchField } from "../common-components/SearchField/SearchField";
 import { Button } from "../common-components/Button/Button";
 import { HeroCard } from "../components/HeroCard/HeroCard";
-import useAxios from "axios-hooks";
+import { useHeroes } from "../hooks/useHeroes";
 
 const HeroesGrid = styled(Box)`
   display: grid;
@@ -23,13 +23,7 @@ export function Search() {
     doSearch: false,
   });
 
-  const [{ data: heroes }, searchHero] = useAxios(`/search/${search.value}`, {
-    manual: true,
-  });
-
-  React.useEffect(() => {
-    searchHero();
-  }, []);
+  const { heroes, searchHero } = useHeroes(search.value);
 
   React.useEffect(() => {
     if (search.doSearch) {
