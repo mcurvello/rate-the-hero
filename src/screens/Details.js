@@ -11,12 +11,15 @@ import {
   Option,
   SelectField,
 } from "../common-components/SelectField/SelectField";
+import { Alert } from "../common-components/Alert/Alert";
 import { Button } from "../common-components/Button/Button";
 import { HeadingTwo } from "../common-components/HeadingTwo/HeadingTwo";
 import { Description } from "../common-components/Description/Description";
 import { Card } from "../common-components/Card/Card";
 import { Caption } from "../common-components/Caption/Caption";
 import { useHero } from "../hooks/useHero";
+import { useFormik } from "formik";
+import * as yup from "yup";
 
 const Container = styled.aside`
   width: 727px;
@@ -43,11 +46,24 @@ const DetailsGrid = styled.section`
 export function Details() {
   const { id } = useParams();
 
-  const { hero, isLoadingHero } = useHero(id);
+  const { hero, isLoadingHero, getHeroAvaliation, setHeroAvaliation } =
+    useHero(id);
   const history = useHistory();
   const handleBack = () => {
     history.goBack();
   };
+
+  const formik = useFormik({
+    initialValues: getHeroAvaliation(id) || { avaliation: "" },
+    validationSchema: yup.object().shape({
+      avaliation: yup.string().required(),
+    }),
+    onSubmit: (values) => {
+      setHeroAvaliation({ id, ...values });
+      alert("Nota atribuída com sucesso!");
+      history.push("/");
+    },
+  });
 
   return (
     !isLoadingHero && (
@@ -60,21 +76,35 @@ export function Details() {
             height={194}
             ml={Spaces.SEVEN}
           >
-            <Flex>
-              <SelectField>
-                <Option value="" selected disabled>
-                  Selecione a nota
-                </Option>
-                <Option>5</Option>
-                <Option>4</Option>
-                <Option>3</Option>
-                <Option>2</Option>
-                <Option>1</Option>
-              </SelectField>
-              <Box ml={Spaces.THREE}>
-                <Button>Atribuir</Button>
-              </Box>
-            </Flex>
+            <form onSubmit={formik.handleSubmit} noValidate>
+              <Flex>
+                <SelectField
+                  onChange={formik.handleChange}
+                  name="avaliation"
+                  value={formik.values.avaliation}
+                  required
+                >
+                  <Option value="" disabled>
+                    Selecione a nota
+                  </Option>
+                  <Option>5</Option>
+                  <Option>4</Option>
+                  <Option>3</Option>
+                  <Option>2</Option>
+                  <Option>1</Option>
+                </SelectField>
+                <Box ml={Spaces.THREE}>
+                  <Button type="submit">Atribuir</Button>
+                </Box>
+              </Flex>
+              {formik.errors.avaliation && (
+                <Box mt={Spaces.TWO}>
+                  <Alert type="error">
+                    Escolha uma nota para ser atribuída
+                  </Alert>
+                </Box>
+              )}
+            </form>
           </Flex>
         </Flex>
         <Box my={Spaces.ONE_HALF} as="section">

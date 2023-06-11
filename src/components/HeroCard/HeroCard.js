@@ -11,6 +11,7 @@ import { Card } from "../../common-components/Card/Card";
 import { Description } from "../../common-components/Description/Description";
 import { HeadingTwo } from "../../common-components/HeadingTwo/HeadingTwo";
 import { ButtonLink } from "../../common-components/ButtonLink/ButtonLink";
+import { useHero } from "../../hooks/useHero";
 
 const InformationGrid = styled(Box)`
   display: grid;
@@ -30,6 +31,8 @@ const HeroAvatar = styled.div`
 `;
 
 export function HeroCard({ secretIdentity, name, picture, universe, id }) {
+  const { getHeroAvaliation } = useHero();
+  const heroAvaliation = getHeroAvaliation(id);
   return (
     <Card>
       <InformationGrid p={Spaces.TWO} mb={Spaces.ONE_HALF}>
@@ -44,7 +47,7 @@ export function HeroCard({ secretIdentity, name, picture, universe, id }) {
             <strong>Universo:</strong> {universe}
           </Description>
           <Description as="div" color={Colors.GRAY_700}>
-            <strong>Nota atual:</strong> -
+            <strong>Nota atual:</strong> {heroAvaliation?.avaliation || "-"}
           </Description>
         </Box>
         <HeroAvatar src={picture} />

@@ -8,9 +8,19 @@ export function useHero(heroId) {
     }
   );
 
+  function setHeroAvaliation(hero) {
+    localStorage.setItem(hero.id, JSON.stringify(hero));
+  }
+
+  function getHeroAvaliation(heroId) {
+    return JSON.parse(localStorage.getItem(heroId));
+  }
+
   return {
     hero,
     isLoadingHero,
     getHero,
+    setHeroAvaliation,
+    getHeroAvaliation,
   };
 }
